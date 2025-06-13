@@ -1,0 +1,13 @@
+syntax = "proto3";
+package cca.cca.v1;
+
+import "amino/amino.proto";
+import "gogoproto/gogo.proto";
+
+option go_package = "cca/x/cca/types";
+
+// Params defines the parameters for the module.
+message Params {
+  option (amino.name) = "cca/x/cca/Params";
+  option (gogoproto.equal) = true;
+}
