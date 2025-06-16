@@ -1,0 +1,7 @@
+Query alice account: ccad query bank balance cosmos1cs3ljfsusvq94skw8kq6ecrfzvjecz9lnyj6pc token
+Query bob account: ccad query bank balance cosmos15977pjyfk8wryw8rgpe2dl6kdr9ukf5lxsfex7 token
+bob address: cosmos15977pjyfk8wryw8rgpe2dl6kdr9ukf5lxsfex7
+alice address: cosmos1cs3ljfsusvq94skw8kq6ecrfzvjecz9lnyj6pc
+list all addresses: ccad keys list
+Send 1 token from alice to bob: ccad tx bank send cosmos1cs3ljfsusvq94skw8kq6ecrfzvjecz9lnyj6pc cosmos15977pjyfk8wryw8rgpe2dl6kdr9ukf5lxsfex7 1token
+tx hash: 22A31CDF2B1328F76FC295D6F8DCFF5AD2536A2FFA32DFCDD73CE3962194FC17
