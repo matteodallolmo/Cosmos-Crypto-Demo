@@ -6,5 +6,3 @@ export * from "./useOutsideClick";
 export * from "./useMediaQuery";
 export * from "./useDetectBreakpoints";
 export * from "./useConnectChain";
-export * from "./useAccountAddresses";
-export * from "./useAccountBalance";

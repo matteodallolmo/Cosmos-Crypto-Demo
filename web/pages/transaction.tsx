@@ -1,8 +1,21 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { Box, Text, Spinner, Modal, Button, Stack } from "@interchain-ui/react";
-import { useAccountAddresses, useAccountBalance } from "@/hooks/common";
+import {
+  Box,
+  Text,
+  Spinner,
+  BasicModal,
+  Button,
+  Stack,
+  TextField,
+} from "@interchain-ui/react";
+import {
+  useAccountAddresses,
+  useAccountBalance,
+  useExecuteTransaction,
+} from "@/hooks/transact";
 import { useChainStore } from "@/contexts";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function TransactionPage() {
   const { selectedChain } = useChainStore();
@@ -13,6 +26,23 @@ export default function TransactionPage() {
     selectedAddress || "",
     selectedChain
   );
+
+  const queryClient = useQueryClient();
+
+  //transaction data
+  const [from, setFrom] = useState("");
+  const [to, setTo] = useState("");
+  const [amount, setAmount] = useState("");
+  const [denom, setDenom] = useState("token");
+
+  const {
+    mutate,
+    isError,
+    isSuccess,
+    error: txError,
+    data: txData,
+  } = useExecuteTransaction(selectedChain);
+
   const router = useRouter();
 
   useEffect(() => {
@@ -24,6 +54,17 @@ export default function TransactionPage() {
   const handleRedirect = () => {
     setShowPopup(false);
     router.push("/");
+  };
+
+  const handleSubmit = () => {
+    if (!from || !to || !amount || !denom) return;
+    mutate({
+      fromAddress: from,
+      toAddress: to,
+      amount,
+      denom,
+      chainName: selectedChain,
+    });
   };
 
   return (
@@ -94,8 +135,60 @@ export default function TransactionPage() {
         </Box>
       )}
 
+      <Box mt="40px" width="400px">
+        <Text fontWeight="bold" mb="10px">
+          Send Tokens
+        </Text>
+        <TextField
+          id="sender"
+          placeholder="Sender Address"
+          value={from}
+          onChange={(e) => setFrom(e.target.value)}
+        />
+        <TextField
+          id="receiver"
+          placeholder="Recipient Address"
+          value={to}
+          onChange={(e) => setTo(e.target.value)}
+          mt="10px"
+        />
+        <TextField
+          id="amount"
+          placeholder="Amount"
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+          mt="10px"
+        />
+        <TextField
+          id="denom"
+          placeholder="Denomination"
+          value={denom}
+          onChange={(e) => setDenom(e.target.value)}
+          mt="10px"
+        />
+
+        <Button
+          mt="20px"
+          onClick={handleSubmit}
+          disabled={!from || !to || !amount || !denom}
+        >
+          {"Execute Transaction"}
+        </Button>
+
+        {isError && (
+          <Text color="$red600" mt="10px">
+            Error: {txError.message}
+          </Text>
+        )}
+        {isSuccess && (
+          <Text color="$green600" mt="10px">
+            Tx Success! Hash: {txData.transactionHash}
+          </Text>
+        )}
+      </Box>
+
       {showPopup && (
-        <Modal
+        <BasicModal
           isOpen={showPopup}
           onClose={handleRedirect}
           title="Invalid Chain Selected"
@@ -115,7 +208,7 @@ export default function TransactionPage() {
               Go to Home Page
             </Button>
           </Stack>
-        </Modal>
+        </BasicModal>
       )}
     </Box>
   );
