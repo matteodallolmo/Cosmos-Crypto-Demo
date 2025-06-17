@@ -1,13 +1,18 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { Box, Text, Spinner, Modal, Button, Stack } from "@interchain-ui/react";
-import { useAccountAddresses } from "@/hooks/common";
+import { useAccountAddresses, useAccountBalance } from "@/hooks/common";
 import { useChainStore } from "@/contexts";
 
 export default function TransactionPage() {
   const { selectedChain } = useChainStore();
   const { data, isLoading, error } = useAccountAddresses(selectedChain);
   const [showPopup, setShowPopup] = useState(false);
+  const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
+  const { data: balance, isLoading: isLoadingBalance } = useAccountBalance(
+    selectedAddress || "",
+    selectedChain
+  );
   const router = useRouter();
 
   useEffect(() => {
@@ -41,11 +46,51 @@ export default function TransactionPage() {
         <Text color="$red600">{error.message}</Text>
       ) : data?.invalidChain ? null : (
         <Box>
-          {data?.addresses?.map((address: string, index: number) => (
-            <Text key={index} fontSize="14px" color="$blackAlpha800">
-              {address}
+          {data?.addresses
+            ?.filter((address: string | undefined) => address !== undefined) // Filter out undefined addresses
+            .map((address: string, index: number) => (
+              <Box
+                key={index}
+                display="flex"
+                alignItems="center"
+                gap="10px"
+                mb="10px"
+              >
+                <Text fontSize="14px" color="$blackAlpha800">
+                  {address}
+                </Text>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => setSelectedAddress(address)}
+                >
+                  Query Balance
+                </Button>
+              </Box>
+            ))}
+        </Box>
+      )}
+
+      {selectedAddress && (
+        <Box mt="20px">
+          <Text fontSize="16px" fontWeight="bold">
+            Balance for {selectedAddress}:
+          </Text>
+          {isLoadingBalance ? (
+            <Spinner />
+          ) : balance ? (
+            <Box>
+              {balance.map((bal: any, index: number) => (
+                <Text key={index} fontSize="14px" color="$blackAlpha800">
+                  {bal.amount} {bal.denom}
+                </Text>
+              ))}
+            </Box>
+          ) : (
+            <Text fontSize="14px" color="$red600">
+              Failed to fetch balance.
             </Text>
-          ))}
+          )}
         </Box>
       )}
 
@@ -56,6 +101,7 @@ export default function TransactionPage() {
           title="Invalid Chain Selected"
         >
           <Stack
+            spacing="20px"
             alignItems="center"
             justifyContent="center"
             textAlign="center"

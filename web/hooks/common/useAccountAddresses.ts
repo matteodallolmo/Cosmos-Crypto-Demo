@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useChain } from "@cosmos-kit/react";
 
 export const useAccountAddresses = (chainName: string) => {
-  const { chain, getRpcEndpoint } = useChain(chainName);
+  const { chain, getRestEndpoint } = useChain(chainName);
 
   return useQuery({
     queryKey: ["accountAddresses", chainName],
@@ -11,10 +11,13 @@ export const useAccountAddresses = (chainName: string) => {
         return { invalidChain: true }; // Return a flag for invalid chain
       }
 
-      const rpcEndpoint = await getRpcEndpoint();
+      const restEndpoint = await getRestEndpoint();
       const response = await fetch(
-        `${rpcEndpoint}/cosmos/auth/v1beta1/accounts`
+        `${restEndpoint}/cosmos/auth/v1beta1/accounts`
       );
+      if (!response.ok) {
+        throw new Error("Failed to fetch account addresses");
+      }
       const data = await response.json();
       return {
         invalidChain: false,
