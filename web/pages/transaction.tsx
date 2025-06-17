@@ -15,19 +15,17 @@ import {
   useExecuteTransaction,
 } from "@/hooks/transact";
 import { useChainStore } from "@/contexts";
-import { useQueryClient } from "@tanstack/react-query";
 
 export default function TransactionPage() {
   const { selectedChain } = useChainStore();
   const { data, isLoading, error } = useAccountAddresses(selectedChain);
   const [showPopup, setShowPopup] = useState(false);
   const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
-  const { data: balance, isLoading: isLoadingBalance } = useAccountBalance(
-    selectedAddress || "",
-    selectedChain
-  );
-
-  const queryClient = useQueryClient();
+  const {
+    data: balance,
+    isLoading: isLoadingBalance,
+    refetch: refetchBalance,
+  } = useAccountBalance(selectedAddress || "", selectedChain);
 
   //transaction data
   const [from, setFrom] = useState("");
@@ -58,13 +56,27 @@ export default function TransactionPage() {
 
   const handleSubmit = () => {
     if (!from || !to || !amount || !denom) return;
-    mutate({
-      fromAddress: from,
-      toAddress: to,
-      amount,
-      denom,
-      chainName: selectedChain,
-    });
+
+    mutate(
+      {
+        fromAddress: from,
+        toAddress: to,
+        amount,
+        denom,
+        chainName: selectedChain,
+      },
+      {
+        onSuccess: () => {
+          handleQueryBalance(from);
+          handleQueryBalance(to);
+        },
+      }
+    );
+  };
+
+  const handleQueryBalance = (address: string) => {
+    setSelectedAddress(address);
+    refetchBalance();
   };
 
   return (
@@ -103,7 +115,7 @@ export default function TransactionPage() {
                 <Button
                   variant="secondary"
                   size="sm"
-                  onClick={() => setSelectedAddress(address)}
+                  onClick={() => handleQueryBalance(address)}
                 >
                   Query Balance
                 </Button>
