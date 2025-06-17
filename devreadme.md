@@ -1,4 +1,4 @@
-Query alice account: ccad query bank balance cosmos1cs3ljfsusvq94skw8kq6ecrfzvjecz9lnyj6pc token
+Query alice account balance: ccad query bank balance cosmos1cs3ljfsusvq94skw8kq6ecrfzvjecz9lnyj6pc token
 Query bob account: ccad query bank balance cosmos15977pjyfk8wryw8rgpe2dl6kdr9ukf5lxsfex7 token
 bob address: cosmos15977pjyfk8wryw8rgpe2dl6kdr9ukf5lxsfex7
 alice address: cosmos1cs3ljfsusvq94skw8kq6ecrfzvjecz9lnyj6pc

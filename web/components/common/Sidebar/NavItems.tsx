@@ -1,9 +1,9 @@
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { Box, Icon, IconName, Stack, Text } from '@interchain-ui/react';
-import { RiHome7Line, RiStackLine } from 'react-icons/ri';
-import { MdOutlineWaterDrop, MdOutlineHowToVote } from 'react-icons/md';
-import { LuFileJson } from 'react-icons/lu';
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { Box, Icon, IconName, Stack, Text } from "@interchain-ui/react";
+import { RiHome7Line, RiStackLine } from "react-icons/ri";
+import { MdOutlineWaterDrop, MdOutlineHowToVote } from "react-icons/md";
+import { LuFileJson } from "react-icons/lu";
 
 type NavIcon = IconName | JSX.Element;
 
@@ -16,28 +16,33 @@ type NavItem = {
 const navItems: NavItem[] = [
   {
     icon: <RiHome7Line size="20px" />,
-    label: 'Home',
-    href: '/',
+    label: "Home",
+    href: "/",
   },
   {
     icon: <RiStackLine size="20px" />,
-    label: 'Staking',
-    href: '/staking',
+    label: "Staking",
+    href: "/staking",
   },
   {
     icon: <MdOutlineHowToVote size="20px" />,
-    label: 'Governance',
-    href: '/governance',
+    label: "Governance",
+    href: "/governance",
   },
   {
     icon: <LuFileJson size="20px" />,
-    label: 'Contract',
-    href: '/contract',
+    label: "Contract",
+    href: "/contract",
   },
   {
-    icon: 'document',
-    label: 'Docs',
-    href: '/docs',
+    icon: "document",
+    label: "Docs",
+    href: "/docs",
+  },
+  {
+    icon: "walletFilled",
+    label: "Transactions",
+    href: "/transaction",
   },
 ];
 
@@ -64,11 +69,11 @@ const NavItem = ({
         color="$text"
         attributes={{ onClick }}
         backgroundColor={{
-          hover: '$purple200',
-          base: isActive ? '$purple200' : 'transparent',
+          hover: "$purple200",
+          base: isActive ? "$purple200" : "transparent",
         }}
       >
-        {typeof icon === 'string' ? <Icon name={icon} size="$xl" /> : icon}
+        {typeof icon === "string" ? <Icon name={icon} size="$xl" /> : icon}
         <Text fontSize="$md" fontWeight="$medium">
           {label}
         </Text>
@@ -79,7 +84,7 @@ const NavItem = ({
 
 export const NavItems = ({ onItemClick }: { onItemClick?: () => void }) => {
   return (
-    <Stack direction="vertical" space="20px" attributes={{ width: '100%' }}>
+    <Stack direction="vertical" space="20px" attributes={{ width: "100%" }}>
       {navItems.map(({ href, icon, label }) => (
         <NavItem
           key={label}
