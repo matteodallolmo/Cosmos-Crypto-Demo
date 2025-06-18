@@ -1,9 +1,9 @@
-import Image from 'next/image';
-import { Box, Text, useColorModeValue } from '@interchain-ui/react';
+import Image from "next/image";
+import { Box, Text, useColorModeValue } from "@interchain-ui/react";
 
-import { Button } from '@/components';
-import { useChainStore } from '@/contexts';
-import { useConnectChain, useDetectBreakpoints } from '@/hooks';
+import { Button } from "@/components";
+import { useChainStore } from "@/contexts";
+import { useConnectChain, useDetectBreakpoints } from "@/hooks";
 
 export default function Home() {
   const { isMobile } = useDetectBreakpoints();
@@ -12,8 +12,8 @@ export default function Home() {
     useConnectChain(selectedChain);
 
   const chainsImageSrc = useColorModeValue(
-    '/images/chains.png',
-    '/images/chains-dark.png'
+    "/images/chains.png",
+    "/images/chains-dark.png"
   );
 
   return (
@@ -22,31 +22,31 @@ export default function Home() {
         textAlign="center"
         fontSize="48px"
         fontWeight="500"
-        attributes={{ mt: '200px', mb: '20px' }}
+        attributes={{ mt: "100px", mb: "20px" }}
       >
-        Create Cosmos App
+        WF Digital Currency Demo
       </Text>
       <Text
         textAlign="center"
         fontSize="16px"
         fontWeight="500"
-        attributes={{ mb: '20px' }}
+        attributes={{ mb: "20px" }}
       >
-        Welcome to <HighlightText>Cosmos Kit</HighlightText> +{' '}
-        <HighlightText>Next.js</HighlightText>
+        Welcome to <HighlightText>WF Blockchain</HighlightText> +{" "}
+        <AccentText>Cosmos Kit</AccentText>
       </Text>
       <Button
-        variant="primary"
+        variant="wells"
         leftIcon="walletFilled"
         mx="auto"
         onClick={isWalletConnected ? openView : connect}
       >
-        {isWalletConnected ? 'My Wallet' : 'Connect Wallet'}
+        {isWalletConnected ? "My Wallet" : "Connect Wallet"}
       </Button>
       <Box
         display="flex"
         justifyContent="center"
-        mt={isMobile ? '60px' : '100px'}
+        mt={isMobile ? "60px" : "100px"}
       >
         <Image
           alt="chains"
@@ -54,9 +54,9 @@ export default function Home() {
           width={840}
           height={224}
           style={{
-            maxWidth: '840px',
-            width: '100%',
-            height: 'auto',
+            maxWidth: "840px",
+            width: "100%",
+            height: "auto",
           }}
         />
       </Box>
@@ -66,7 +66,15 @@ export default function Home() {
 
 const HighlightText = ({ children }: { children: string }) => {
   return (
-    <Text as="span" color="$purple600">
+    <Text as="span" color="$orange600">
+      {children}
+    </Text>
+  );
+};
+
+const AccentText = ({ children }: { children: string }) => {
+  return (
+    <Text as="span" color="$orange400">
       {children}
     </Text>
   );

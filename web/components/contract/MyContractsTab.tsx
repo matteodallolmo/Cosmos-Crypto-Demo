@@ -1,23 +1,23 @@
-import { useState } from 'react';
-import { Box } from '@interchain-ui/react';
+import { useState } from "react";
+import { Box } from "@interchain-ui/react";
 
-import { Button } from '../common';
-import { PopoverSelect } from './PopoverSelect';
-import { MyContractsTable } from './MyContractsTable';
-import { CreateFromUpload } from './CreateFromUpload';
-import { CreateFromCodeId } from './CreateFromCodeId';
+import { Button } from "../common";
+import { PopoverSelect } from "./PopoverSelect";
+import { MyContractsTable } from "./MyContractsTable";
+import { CreateFromUpload } from "./CreateFromUpload";
+import { CreateFromCodeId } from "./CreateFromCodeId";
 
 const ContentViews = {
-  MY_CONTRACTS: 'my_contracts',
-  CREATE_FROM_UPLOAD: 'create_from_upload',
-  CREATE_FROM_CODE_ID: 'create_from_code_id',
+  MY_CONTRACTS: "my_contracts",
+  CREATE_FROM_UPLOAD: "create_from_upload",
+  CREATE_FROM_CODE_ID: "create_from_code_id",
 } as const;
 
-type ContentView = typeof ContentViews[keyof typeof ContentViews];
+type ContentView = (typeof ContentViews)[keyof typeof ContentViews];
 
 const contractCreationOptions = [
-  { label: 'From Upload', value: ContentViews.CREATE_FROM_UPLOAD },
-  { label: 'From Code ID', value: ContentViews.CREATE_FROM_CODE_ID },
+  { label: "From Upload", value: ContentViews.CREATE_FROM_UPLOAD },
+  { label: "From Code ID", value: ContentViews.CREATE_FROM_CODE_ID },
 ];
 
 type MyContractsTabProps = {
@@ -31,14 +31,14 @@ export const MyContractsTab = ({ show, switchTab }: MyContractsTabProps) => {
   );
 
   return (
-    <Box display={show ? 'block' : 'none'}>
+    <Box display={show ? "block" : "none"}>
       <MyContractsTable
         title="My Contracts"
         show={contentView === ContentViews.MY_CONTRACTS}
         switchTab={switchTab}
         createContractTrigger={
           <PopoverSelect
-            trigger={<Button variant="primary">Create Contract</Button>}
+            trigger={<Button variant="wells">Create Contract</Button>}
             options={contractCreationOptions}
             onOptionClick={(value) => setContentView(value as ContentView)}
             popoverWidth="152px"

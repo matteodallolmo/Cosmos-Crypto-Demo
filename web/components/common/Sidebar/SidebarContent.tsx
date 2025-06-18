@@ -1,13 +1,13 @@
-import Image from 'next/image';
-import { Box, useColorModeValue, Text } from '@interchain-ui/react';
-import { MdOutlineAccountBalanceWallet } from 'react-icons/md';
-import { FiLogOut } from 'react-icons/fi';
+import Image from "next/image";
+import { Box, useColorModeValue, Text } from "@interchain-ui/react";
+import { MdOutlineAccountBalanceWallet } from "react-icons/md";
+import { FiLogOut } from "react-icons/fi";
 
-import { NavItems } from './NavItems';
-import { Button } from '@/components';
-import { useChainStore } from '@/contexts';
-import { shortenAddress } from '@/utils';
-import { useCopyToClipboard, useConnectChain } from '@/hooks';
+import { NavItems } from "./NavItems";
+import { Button } from "@/components";
+import { useChainStore } from "@/contexts";
+import { shortenAddress } from "@/utils";
+import { useCopyToClipboard, useConnectChain } from "@/hooks";
 
 export const SidebarContent = ({ onClose }: { onClose: () => void }) => {
   const { selectedChain } = useChainStore();
@@ -16,8 +16,8 @@ export const SidebarContent = ({ onClose }: { onClose: () => void }) => {
     useConnectChain(selectedChain);
 
   const poweredByLogoSrc = useColorModeValue(
-    '/logos/cosmology.svg',
-    '/logos/cosmology-dark.svg'
+    "/logos/cosmology.svg",
+    "/logos/cosmology-dark.svg"
   );
 
   return (
@@ -41,21 +41,21 @@ export const SidebarContent = ({ onClose }: { onClose: () => void }) => {
                 wallet?.logo ? (
                   <Image
                     src={
-                      typeof wallet.logo === 'string'
+                      typeof wallet.logo === "string"
                         ? wallet.logo
                         : wallet.logo.major || wallet.logo.minor
                     }
                     alt={wallet.prettyName}
                     width="0"
                     height="0"
-                    style={{ width: '20px', height: 'auto' }}
+                    style={{ width: "20px", height: "auto" }}
                   />
                 ) : (
-                  'checkboxCircle'
+                  "checkboxCircle"
                 )
               }
-              rightIcon={isCopied ? 'checkLine' : 'copy'}
-              iconColor={isCopied ? '$textSuccess' : 'inherit'}
+              rightIcon={isCopied ? "checkLine" : "copy"}
+              iconColor={isCopied ? "$textSuccess" : "inherit"}
               iconSize="$lg"
               onClick={() => copyToClipboard(address)}
             >
@@ -91,13 +91,15 @@ export const SidebarContent = ({ onClose }: { onClose: () => void }) => {
           <Text fontSize="12px" fontWeight="500" color="$text">
             Powered by
           </Text>
-          <a href="https://github.com/cosmology-tech"><Image
-            src={poweredByLogoSrc}
-            alt="cosmology"
-            width="0"
-            height="0"
-            style={{ width: '100px', height: 'auto' }}
-          /></a>
+          <a href="https://github.com/cosmology-tech">
+            <Image
+              src={poweredByLogoSrc}
+              alt="cosmology"
+              width="0"
+              height="0"
+              style={{ width: "100px", height: "auto" }}
+            />
+          </a>
         </Box>
       </Box>
     </Box>

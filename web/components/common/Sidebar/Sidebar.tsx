@@ -1,11 +1,11 @@
-import Image from 'next/image';
-import Link from 'next/link';
-import { Box, useColorModeValue } from '@interchain-ui/react';
-import { VscClose } from 'react-icons/vsc';
+import Image from "next/image";
+import Link from "next/link";
+import { Box, useColorModeValue } from "@interchain-ui/react";
+import { VscClose } from "react-icons/vsc";
 
-import { Drawer } from '@/components';
-import { useDetectBreakpoints } from '@/hooks';
-import { SidebarContent } from './SidebarContent';
+import { Drawer } from "@/components";
+import { useDetectBreakpoints } from "@/hooks";
+import { SidebarContent } from "./SidebarContent";
 
 type SidebarProps = {
   isOpen: boolean;
@@ -16,8 +16,8 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
   const { isDesktop } = useDetectBreakpoints();
 
   const brandLogoSrc = useColorModeValue(
-    '/logos/brand-logo.svg',
-    '/logos/brand-logo-dark.svg'
+    "/logos/wellsLogo.svg",
+    "/logos/wellsLogo.svg"
   );
 
   const desktopSidebar = (
@@ -37,13 +37,13 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
       borderRightWidth="1px"
       borderRightStyle="solid"
     >
-      <Link href="/" style={{ marginBottom: '50px' }}>
+      <Link href="/" style={{ marginTop: "-8px", marginBottom: "50px" }}>
         <Image
           src={brandLogoSrc}
           alt="your logo"
           width="0"
           height="0"
-          style={{ width: '180px', height: 'auto' }}
+          style={{ width: "180px", height: "auto" }}
         />
       </Link>
       <SidebarContent onClose={onClose} />

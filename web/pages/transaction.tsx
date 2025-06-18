@@ -4,12 +4,12 @@ import {
   Box,
   Text,
   Spinner,
-  Button,
   TextField,
   BasicModal,
   Select,
   SelectOption,
 } from "@interchain-ui/react";
+import { Button } from "@/components";
 import {
   useAccountAddresses,
   useAccountBalance,
@@ -113,7 +113,9 @@ export default function TransactionPage() {
                 <Text fontSize="14px">
                   <strong>Address:</strong> {addr}
                 </Text>
-                <Button onClick={() => handleSelect(addr)}>Show Balance</Button>
+                <Button variant="wells" onClick={() => handleSelect(addr)}>
+                  Show Balance
+                </Button>
               </Box>
             ))
         )}
@@ -190,6 +192,8 @@ export default function TransactionPage() {
           <Button
             onClick={handleExecute}
             disabled={!from || !to || !amount || !denom}
+            variant="wells"
+            width={300}
           >
             Execute Transaction
           </Button>
@@ -222,10 +226,16 @@ export default function TransactionPage() {
             p="24px"
             textAlign="center"
           >
-            <Text fontSize="16px" color="$whiteAlpha800">
+            <Text fontSize="16px" color="$blackAlpha800">
               Please select the "cca" chain to view account addresses.
             </Text>
-            <Button onClick={handleRedirect}>Go to Home Page</Button>
+            <Button
+              backgroundColor="#dd1f24"
+              color="#ffffff"
+              onClick={handleRedirect}
+            >
+              Go to Home Page
+            </Button>
           </Box>
         </BasicModal>
       )}

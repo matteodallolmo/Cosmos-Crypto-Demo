@@ -73,8 +73,8 @@ const NavItem = ({
         color="$text"
         attributes={{ onClick }}
         backgroundColor={{
-          hover: "$purple200",
-          base: isActive ? "$purple200" : "transparent",
+          hover: "$orange600",
+          base: isActive ? "$orange400" : "transparent",
         }}
       >
         {typeof icon === "string" ? <Icon name={icon} size="$xl" /> : icon}
