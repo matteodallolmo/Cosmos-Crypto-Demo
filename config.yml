@@ -10,6 +10,26 @@ accounts:
     coins:
       - 10000token
       - 100000000stake
+  - name: charlie
+    coins:
+      - 150000token
+      - 100000000stake
+  - name: david
+    coins:
+      - 50000token
+      - 100000000stake
+  - name: ellen
+    coins:
+      - 77000token
+      - 100000000stake
+  - name: frank
+    coins:
+      - 85000token
+      - 100000000stake
+  - name: george
+    coins:
+      - 40000token
+      - 100000000stake
 client:
   openapi:
     path: docs/static/openapi.yml
