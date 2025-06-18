@@ -2,7 +2,11 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { Box, Icon, IconName, Stack, Text } from "@interchain-ui/react";
 import { RiHome7Line, RiStackLine } from "react-icons/ri";
-import { MdOutlineWaterDrop, MdOutlineHowToVote } from "react-icons/md";
+import {
+  MdOutlineWaterDrop,
+  MdOutlineHowToVote,
+  MdOutlineAccountBalanceWallet,
+} from "react-icons/md";
 import { LuFileJson } from "react-icons/lu";
 
 type NavIcon = IconName | JSX.Element;
@@ -40,7 +44,7 @@ const navItems: NavItem[] = [
     href: "/docs",
   },
   {
-    icon: "walletFilled",
+    icon: <MdOutlineAccountBalanceWallet size="20px" />,
     label: "Transactions",
     href: "/transaction",
   },

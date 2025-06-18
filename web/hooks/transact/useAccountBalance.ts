@@ -7,6 +7,9 @@ export const useAccountBalance = (address: string, chainName: string) => {
   return useQuery({
     queryKey: ["accountBalance", address],
     queryFn: async () => {
+      if (!address) {
+        throw new Error("Address is required to fetch account balance");
+      }
       const restEndpoint = await getRestEndpoint();
       const response = await fetch(
         `${restEndpoint}/cosmos/bank/v1beta1/balances/${address}`

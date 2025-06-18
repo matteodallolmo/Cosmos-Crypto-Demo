@@ -4,10 +4,11 @@ import {
   Box,
   Text,
   Spinner,
-  BasicModal,
   Button,
-  Stack,
   TextField,
+  BasicModal,
+  Select,
+  SelectOption,
 } from "@interchain-ui/react";
 import {
   useAccountAddresses,
@@ -15,6 +16,7 @@ import {
   useExecuteTransaction,
 } from "@/hooks/transact";
 import { useChainStore } from "@/contexts";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function TransactionPage() {
   const { selectedChain } = useChainStore();
@@ -26,8 +28,8 @@ export default function TransactionPage() {
     isLoading: isLoadingBalance,
     refetch: refetchBalance,
   } = useAccountBalance(selectedAddress || "", selectedChain);
+  const queryClient = useQueryClient();
 
-  //transaction data
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [amount, setAmount] = useState("");
@@ -54,9 +56,8 @@ export default function TransactionPage() {
     router.push("/");
   };
 
-  const handleSubmit = () => {
+  const handleExecute = () => {
     if (!from || !to || !amount || !denom) return;
-
     mutate(
       {
         fromAddress: from,
@@ -67,136 +68,145 @@ export default function TransactionPage() {
       },
       {
         onSuccess: () => {
-          handleQueryBalance(from);
-          handleQueryBalance(to);
+          refetchBalance();
+          queryClient.invalidateQueries(["account-balance", to, selectedChain]);
         },
       }
     );
   };
 
-  const handleQueryBalance = (address: string) => {
+  const handleSelect = (address: string) => {
     setSelectedAddress(address);
     refetchBalance();
   };
 
   return (
-    <Box
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      height="100vh"
-      flexDirection="column"
-    >
-      <Text fontSize="24px" fontWeight="bold">
-        Transaction Page
+    <Box p="32px" maxWidth="800px" margin="0 auto">
+      <Text fontSize="28px" fontWeight="bold" mb="24px">
+        Accounts
       </Text>
-      <Text fontSize="16px" color="$blackAlpha600" mb="20px">
-        List of Account Addresses:
-      </Text>
-      {isLoading ? (
-        <Spinner />
-      ) : error ? (
-        <Text color="$red600">{error.message}</Text>
-      ) : data?.invalidChain ? null : (
-        <Box>
-          {data?.addresses
-            ?.filter((address: string | undefined) => address !== undefined) // Filter out undefined addresses
-            .map((address: string, index: number) => (
+
+      {/* Scrollable List of Accounts */}
+      <Box
+        maxHeight="40vh"
+        overflowY="auto"
+        border="1px solid var(--ic-gray-200)"
+        borderRadius="8px"
+        mb="32px"
+      >
+        {isLoading ? (
+          <Spinner />
+        ) : error ? (
+          <Text color="red600">{error.message}</Text>
+        ) : (
+          data?.addresses
+            ?.filter((address: string | undefined) => address !== undefined)
+            .map((addr) => (
               <Box
-                key={index}
+                key={addr}
                 display="flex"
                 alignItems="center"
-                gap="10px"
-                mb="10px"
+                justifyContent="space-between"
+                p="12px 16px"
+                borderBottom="1px solid var(--ic-gray-200)"
               >
-                <Text fontSize="14px" color="$blackAlpha800">
-                  {address}
+                <Text fontSize="14px">
+                  <strong>Address:</strong> {addr}
                 </Text>
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  onClick={() => handleQueryBalance(address)}
-                >
-                  Query Balance
-                </Button>
+                <Button onClick={() => handleSelect(addr)}>Show Balance</Button>
               </Box>
-            ))}
-        </Box>
-      )}
+            ))
+        )}
+      </Box>
 
+      {/* Balance Display */}
       {selectedAddress && (
-        <Box mt="20px">
-          <Text fontSize="16px" fontWeight="bold">
-            Balance for {selectedAddress}:
+        <Box
+          mb="32px"
+          p="16px"
+          border="1px solid var(--ic-gray-200)"
+          borderRadius="8px"
+        >
+          <Text fontWeight="bold" fontSize="16px">
+            Balance for {selectedAddress}
           </Text>
           {isLoadingBalance ? (
             <Spinner />
           ) : balance ? (
-            <Box>
-              {balance.map((bal: any, index: number) => (
-                <Text key={index} fontSize="14px" color="$blackAlpha800">
-                  {bal.amount} {bal.denom}
-                </Text>
-              ))}
-            </Box>
+            balance.map((b: any) => (
+              <Text key={b.denom} fontSize="16px">
+                {b.amount} {b.denom}
+              </Text>
+            ))
           ) : (
-            <Text fontSize="14px" color="$red600">
-              Failed to fetch balance.
-            </Text>
+            <Text color="red600">Unable to fetch balance.</Text>
           )}
         </Box>
       )}
 
-      <Box mt="40px" width="400px">
-        <Text fontWeight="bold" mb="10px">
+      {/* Transaction Form */}
+      <Box
+        p="24px"
+        border="1px solid var(--ic-gray-200)"
+        borderRadius="8px"
+        textAlign="center"
+      >
+        <Text fontSize="20px" fontWeight="bold" mb="16px">
           Send Tokens
         </Text>
-        <TextField
-          id="sender"
-          placeholder="Sender Address"
-          value={from}
-          onChange={(e) => setFrom(e.target.value)}
-        />
-        <TextField
-          id="receiver"
-          placeholder="Recipient Address"
-          value={to}
-          onChange={(e) => setTo(e.target.value)}
-          mt="10px"
-        />
-        <TextField
-          id="amount"
-          placeholder="Amount"
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-          mt="10px"
-        />
-        <TextField
-          id="denom"
-          placeholder="Denomination"
-          value={denom}
-          onChange={(e) => setDenom(e.target.value)}
-          mt="10px"
-        />
-
-        <Button
-          mt="20px"
-          onClick={handleSubmit}
-          disabled={!from || !to || !amount || !denom}
+        <Box
+          display="flex"
+          flexDirection="column"
+          gap="16px"
+          alignItems="stretch"
         >
-          {"Execute Transaction"}
-        </Button>
+          <TextField
+            label="From"
+            value={from}
+            onChange={(e) => setFrom(e.target.value)}
+          />
+          <TextField
+            label="To"
+            value={to}
+            onChange={(e) => setTo(e.target.value)}
+          />
+          <Box display="flex" gap="16px">
+            <TextField
+              label="Amount"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              flex="1"
+            />
+            <Select
+              width={150}
+              label="Denomination"
+              value={denom}
+              onChange={(e) => setDenom(e.target.value)}
+            >
+              <SelectOption label="token">Token</SelectOption>
+              <SelectOption label="stake">Stake</SelectOption>
+            </Select>
+          </Box>
+          <Button
+            onClick={handleExecute}
+            disabled={!from || !to || !amount || !denom}
+          >
+            Execute Transaction
+          </Button>
 
-        {isError && (
-          <Text color="$red600" mt="10px">
-            Error: {txError.message}
-          </Text>
-        )}
-        {isSuccess && (
-          <Text color="$green600" mt="10px">
-            Tx Success! Hash: {txData.transactionHash}
-          </Text>
-        )}
+          {isError && (
+            <Box mt="12px" p="12px" bg="$red600" borderRadius="8px">
+              <Text>Error: {txError.message}</Text>
+            </Box>
+          )}
+          {isSuccess && (
+            <Box mt="12px" p="12px" bg="$green600" borderRadius="8px">
+              <Text>
+                Transaction successful! Hash: {txData.transactionHash}
+              </Text>
+            </Box>
+          )}
+        </Box>
       </Box>
 
       {showPopup && (
@@ -205,21 +215,18 @@ export default function TransactionPage() {
           onClose={handleRedirect}
           title="Invalid Chain Selected"
         >
-          <Stack
-            spacing="20px"
-            alignItems="center"
-            justifyContent="center"
+          <Box
+            display="flex"
+            flexDirection="column"
+            gap="16px"
+            p="24px"
             textAlign="center"
-            direction="column"
-            p="20px"
           >
-            <Text fontSize="16px" color="$blackAlpha800">
+            <Text fontSize="16px" color="$whiteAlpha800">
               Please select the "cca" chain to view account addresses.
             </Text>
-            <Button variant="primary" onClick={handleRedirect}>
-              Go to Home Page
-            </Button>
-          </Stack>
+            <Button onClick={handleRedirect}>Go to Home Page</Button>
+          </Box>
         </BasicModal>
       )}
     </Box>
