@@ -7,7 +7,7 @@ import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 // import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Box, Toaster, useTheme } from "@interchain-ui/react";
 import { chains, assets } from "chain-registry";
-
+import { useEffect } from "react";
 import { CustomThemeProvider, Layout } from "@/components";
 import { wallets } from "@/config";
 import { getSignerOptions } from "@/utils";
@@ -23,10 +23,15 @@ const queryClient = new QueryClient({
 });
 
 function CreateCosmosApp({ Component, pageProps }: AppProps) {
-  const { themeClass } = useTheme();
+  const { themeClass, setTheme } = useTheme();
+
+  useEffect(() => {
+    setTheme("dark");
+    setTheme("light");
+  }, []);
 
   return (
-    <CustomThemeProvider>
+    <CustomThemeProvider customTheme={"light"}>
       <ChainProvider
         chains={chains}
         // @ts-ignore

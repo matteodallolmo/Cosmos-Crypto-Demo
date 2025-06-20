@@ -74,7 +74,7 @@ const HighlightText = ({ children }: { children: string }) => {
 
 const AccentText = ({ children }: { children: string }) => {
   return (
-    <Text as="span" color="$orange400">
+    <Text as="span" color="$yellow400">
       {children}
     </Text>
   );
